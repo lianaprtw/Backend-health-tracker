@@ -1,12 +1,175 @@
 openapi: '3.0.3'
 info:
-  title: API Title
-  version: '1.0'
+  title: Health Tracker API
+  version: 1.0.0
+  description: API untuk manajemen data Health Tracker
+
 servers:
-  - url: https://api.server.test/v1
+  - url: http://localhost:3000/api
+    description: Local server
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id_user:
+          type: integer
+        nama:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - nama
+        - email
+        - password
+
+    Trainner:
+      type: object
+      properties:
+        id_trainner:
+          type: integer
+        nama:
+          type: string
+        spesialis:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - nama
+        - spesialis
+        - email
+        - password
+
+    Jadwal:
+      type: object
+      properties:
+        id_jadwal:
+          type: integer
+        id_user:
+          type: integer
+        id_trainner:
+          type: integer
+        tanggal:
+          type: string
+          format: date
+        waktu:
+          type: string
+        jenis_latihan:
+          type: string
+      required:
+        - id_user
+        - id_trainner
+        - tanggal
+        - waktu
+        - jenis_latihan
+
+    AirMinum:
+      type: object
+      properties:
+        id_air_minum:
+          type: integer
+        id_user:
+          type: integer
+        tanggal:
+          type: string
+          format: date
+        waktu:
+          type: string
+          format: time
+        jumlah_air:
+          type: integer
+      required:
+        - id_user
+        - tanggal
+        - waktu
+        - jumlah_air
+
+    Proggress:
+      type: object
+      properties:
+        id_progress:
+          type: integer
+        id_user:
+          type: integer
+        tanggal:
+          type: string
+          format: date
+        jumlah_langkah:
+          type: integer
+        kalori_harian:
+          type: number
+        kalori_mingguan:
+          type: number
+        kalori_bulanan:
+          type: number
+      required:
+        - id_user
+        - tanggal
+        - jumlah_langkah
+        - kalori_harian
+        - kalori_mingguan
+        - kalori_bulanan
+        
 paths:
-  /test:
+  /users:
     get:
+      summary: Ambil semua user
       responses:
         '200':
-          description: OK
+          description: List user
+    post:
+      summary: Tambah user baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User berhasil dibuat
+
+  /users/{id}:
+    get:
+      summary: Ambil data user berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data user ditemukan
+    put:
+      summary: Update data user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User berhasil diupdate
+    delete:
+      summary: Hapus user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User berhasil dihapus
