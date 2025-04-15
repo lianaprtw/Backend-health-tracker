@@ -16,5 +16,8 @@
     "url": "https://github.com/lianaprtw/Backend-health-tracker/issues"
   },
   "homepage": "https://github.com/lianaprtw/Backend-health-tracker#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
