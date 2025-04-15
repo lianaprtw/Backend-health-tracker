@@ -18,3 +18,16 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(3000, () => {
     console.log('Server berjalan di http://localhost:3000');
 });
+
+                //user routes//
+
+// Get all user
+app.get('/users', (req, res) => {  // Mendefinisikan endpoint GET pada path '/users'
+    db.query('SELECT id_user, nama, email FROM tb_user', (err, result) => {   // Jalankan perintah SQL untuk mengambil data id_user, nama, dan email dari tabel tb_user
+        if (err) {  // Jika terjadi error saat menjalankan query
+            console.error ("Error fetching users:", err);   // Tampilkan pesan error di console
+            return res.status(500).send(err);  // Kirim response dengan status 500 (Internal Server Error) beserta pesan error
+        }
+        res.json(results);  // Jika query berhasil, kirim hasilnya (array data user) dalam bentuk JSON ke client
+    });
+});
