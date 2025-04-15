@@ -13,7 +13,6 @@ app.use(express.json()); // middleware untuk parsing JSON
 // Menyajikan dokumentasi API Swagger di endpoint '/docs'
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-
 // menambakan  kode untuk menjalankan server
 app.listen(3000, () => {
     console.log('Server berjalan di http://localhost:3000');
