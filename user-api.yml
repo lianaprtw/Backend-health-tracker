@@ -5,7 +5,7 @@ info:
   description: API untuk manajemen data Health Tracker
 
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:3000/
     description: Local server
 components:
   schemas:
