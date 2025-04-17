@@ -46,3 +46,17 @@ app.post('/users', (req, ress) => {         // Mengambil data 'nama', 'email', d
     );
 });
 
+// Get User by ID
+app.get('/users/:id', (req, res) => {
+    const userId = parseInt(req.params.id);    // Ambil ID dari URL dan ubah jadi angka
+    db.query('SELECT id_user, nama, email FROM tb_user WHERE id_user = ?', [userId], (err, results) => {    // Jalankan query untuk ambil data user dari tabel berdasarkan ID
+        if (err) {
+            console.error('Error fetching user by ID:', err);
+            return res.status(500).send(err);   // Kalau error saat ambil data, kirim status 500
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found'});   // Kalau user tidak ditemukan, kirim status 404
+        }
+        res.json(results[0]);  // Kirim data user yang ditemukan
+    });
+});
