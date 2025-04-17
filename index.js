@@ -30,3 +30,19 @@ app.get('/users', (req, res) => {  // Mendefinisikan endpoint GET pada path '/us
         res.json(results);  // Jika query berhasil, kirim hasilnya (array data user) dalam bentuk JSON ke client
     });
 });
+
+//Create New User
+app.post('/users', (req, ress) => {         // Mengambil data 'nama', 'email', dan 'password' dari body request
+    const { nama, email, password } = req.body;     // Menjalankan query SQL untuk memasukkan data user baru ke dalam tabel 'tb_user'
+    db.query('INSERT INTO tb_user (nama, email, password) VALUES (?, ?, ?)',  // Query SQL dengan parameter placeholder (?)
+        [nama, email, password],    // Data yang akan dimasukkan ke query, sesuai urutan placeholder
+        (err, result) => {           // Callback function yang akan dijalankan setelah query selesai
+            if (err) {
+                console.error("Error creating user:", err);     // Jika terjadi error saat query dijalankan, tampilkan pesan error di console
+                return res.status(500).send(err);                // Kirim response ke client dengan status 500 (Internal Server Error) dan kirim error-nya
+            }
+            res.status(201).json({ id_user: result.insertId, nama, email }); // Jika berhasil, kirim response ke client dengan status 201 (Created)
+        }
+    );
+});
+
