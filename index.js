@@ -60,3 +60,24 @@ app.get('/users/:id', (req, res) => {
         res.json(results[0]);  // Kirim data user yang ditemukan
     });
 });
+
+// Update User
+app.put('/users/:id', (req, res) => { // Update data user berdasarkan ID dari URL
+    const userId = parseInt(req.params.id);  // Ambil ID dari URL dan ubah ke angka
+    const { nama, email, password } = req.body;  
+    // Ambil data baru dari body request
+    db.query('UPDATE tb_user SET nama = ?, email= ?, password = ? WHERE id_user = ?',
+        [nama, email, password, userId],  // Jalankan query untuk update data user berdasarkan ID dengan data baru
+        (err, result) => {
+            if (err) {
+                console.error("Error updating user:", err);
+                return res.status(500).send(err);  // Jika error saat update, kirim status 500
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'User not found' }); // Jika tidak ada baris yang diubah (ID tidak ditemukan), kirim 404
+            }
+            res.json({ message: 'User updated successfully', id_user: userId, nama, email }); 
+            // Jika berhasil, kirim respon berhasil
+        }
+    );
+});
