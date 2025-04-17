@@ -81,3 +81,18 @@ app.put('/users/:id', (req, res) => { // Update data user berdasarkan ID dari UR
         }
     );
 });
+
+// Delete User
+app.delete('/users/:id', (req, res) => { // Hapus user berdasarkan ID
+    const userId = parseInt(req.params.id);  // Ambil ID user dari URL dan ubah jadi angka
+    db.query('DELETE FROM tb_user WHERE id_user = ?', [userId], (err, result) => {   // Jalankan query untuk menghapus user berdasarkan ID
+        if (err) {
+            console.error("Error deleting user:", err);
+            return res.status(500).send(err);  // Jika terjadi error saat menghapus, kirim status 500
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });  // Jika tidak ada baris yang dihapus (user tidak ditemukan), kirim status 404
+        }
+        res.status(204).send(); // Jika berhasil, kirim status 204 (no content)
+    });
+});
