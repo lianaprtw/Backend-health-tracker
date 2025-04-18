@@ -273,3 +273,22 @@ app.post('/jadwals', (req, res) => {
       }
     );
   });
+
+  app.get('/jadwals/:id', (req, res) => {
+    const { id } = req.params;
+    db.query(
+      'SELECT * FROM tb_jadwal WHERE id_jadwal = ?',
+      [id],
+      (err, results) => {
+        if (err) {
+          console.error('Error fetching jadwal:', err);
+          return res.status(500).json({ error: err.message });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({ message: 'Jadwal not found' });
+        }
+        res.json(results[0]);
+      }
+    );
+  });
+  
