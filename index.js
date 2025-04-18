@@ -111,3 +111,20 @@ app.get('/traineers', (req, res) => {
         res.json(result); // Mengirim hasil query dalam format JSON
     });
 });
+
+// Create New Traineer
+// route untuk menambahkan data traineer baru
+app.post ('/traineers', (req, res) => {
+    const { nama, spesialis, email, password} = req.body; // mengambil data dari body request
+    // menjalankan query SQL untuk memasukkan data traineer baru ke dalam tabel tb_traineer
+    db.query('INSERT INTO tb_traineer (nama, spesialis, email, password) VALUES (?, ?, ?, ?)',
+        [nama, spesialis, email, password], // menyiapkan data untuk query
+        (err, result) => {
+            if (err) {
+                 console.error ("Error creating traineer:", err); // menampilkan pesan error di console jika terjadi kesalahan pada query
+                return res.status(500).send(err); // mengirim response error
+            }
+            res.status(201).json({id_traineer: result.insertId, nama, spesialis, email }); // mengirim response sukses dengan status 201 (created)
+        }
+    );
+}); 
