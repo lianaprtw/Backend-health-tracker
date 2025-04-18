@@ -96,3 +96,18 @@ app.delete('/users/:id', (req, res) => { // Hapus user berdasarkan ID
         res.status(204).send(); // Jika berhasil, kirim status 204 (no content)
     });
 });
+
+// -- Trainner Routes -- //
+
+// Get all trainners
+// route untuk mengambil data semua traineer
+app.get('/traineers', (req, res) => {
+    // menjalankan query SQL untuk mengambil data id_traineer, nama, spesialis, dan email dari tabel tb_traineer
+    db.query('SELECT id_traineer, nama, spesialis, email FROM tb_traineer', (err, result) => {
+        if (err) {
+            console.error("Error fetching traineers:", err); // menampilkan pesan error di console jika terjadi kesalahan pada query
+            return res.status(500).send(err); // mengirim response error
+        }
+        res.json(result); // Mengirim hasil query dalam format JSON
+    });
+});
