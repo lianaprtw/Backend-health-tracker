@@ -128,3 +128,20 @@ app.post ('/traineers', (req, res) => {
         }
     );
 }); 
+
+// Get Traineer by ID
+// route untuk mengambil data traineer berdasarkan ID
+app.get('/traineers/:id', (req, res) => {
+    const traineerID = parseInt(req.params.id); //mengambil ID dari URL dan mengubahnya menjadi angka
+    // menjalankan query SQL untuk mengambil data id_traineer dari tabel tb_traineer berdasarkan ID
+    db.query('SELECT id_traineer, nama, spesialis, email FROM tb_traineer WHERE id_traineer = ?', [traineerID], (err, result) => {
+        if (err) {
+            console.error("Error fetching traineer by ID:", err); //  menampilkan pesan error jika terjadi kesalahan pada query
+            return res.status(500).send(err); // mengirim response error
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Traineer not found' }); // jika tidak ada data yang ditemukan, mengirim response 404 (not found)
+        }
+        res.json(result[0]); // mengirim data traineer yang ditemukan dalam format JSON
+    });
+});
