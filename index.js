@@ -166,3 +166,21 @@ app.put('/traineers/:id', (req, res) => {
         }
     );
 });
+
+// Delete Traineer
+// route untuk menghapus data traineer berdasarkan ID
+app.delete('/traineers/:id', (req, res) => {
+    const traineerId = parseInt(req.params.id); // mengambil ID dari parameter URL dan mengubahnya menjadi angka
+    // menjalankan query SQL untuk menghapus data traineer berdasarkan ID
+    db.query('DELETE FROM tb_traineer WHERE id_traineer = ?', [traineerId], (err, result) => {
+        if (err) {
+            console.error("Error deleting traineer:", err); // menampilkan pesan error jika terjadi kesalahan pada query
+            return res.status(500).send(err); // mengirim response error
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Traineer not found' }); // jika tidak ada data yang dihapus, mengirim response 404 (not found)
+        }
+        res.status(204).send(); // mengirim response sukses dengan status 204
+    });
+});
