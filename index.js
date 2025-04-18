@@ -41,3 +41,10 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+// GET all schedules
+router.get("/", (req, res) => {
+  db.query("SELECT * FROM tb_jadwal", (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
