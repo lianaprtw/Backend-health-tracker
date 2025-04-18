@@ -145,3 +145,24 @@ app.get('/traineers/:id', (req, res) => {
         res.json(result[0]); // mengirim data traineer yang ditemukan dalam format JSON
     });
 });
+
+// Update Traineer
+// route untuk mengupdate data traineer berdasarkan ID
+app.put('/traineers/:id', (req, res) => {
+    const traineerId = parseInt(req.params.id); // mengambil ID dari parameter URL dan mengubahnya menjadi angka
+    const { nama, spesialis, email, password } = req.body; // mengambil data baru dari body request
+    // menjalankan query SQL untuk mengupdate data traineer berdasarkan ID
+    db.query('UPDATE tb_traineer SET nama = ?, spesialis = ?, email = ?, password = ? WHERE id_traineer = ?',
+        [nama, spesialis, email, password, traineerId], // menyiapkan data untuk query
+        (err, result) => {
+            if (err) {
+                console.error("Error updating traineer:", err); // menampilkan pesan error jika terjadi kesalahan pada query
+                return res.status(500).send(err);
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'traineer not fount' }); // jika tidak ada data yang diupdate, mengirim response 404 (not found)
+            }
+            res.json({ message: 'traineer updated successfully', id_traineer: traineerId, nama, spesialis, email }); // berhasil di update, mengirim response sukses
+        }
+    );
+});
