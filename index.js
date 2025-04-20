@@ -309,3 +309,17 @@ app.put('/jadwals/:id', (req, res) => {
     }
   );
 });
+// Delete a jadwal
+app.delete('/jadwals/:id', (req, res) => {
+  const jadwalId = parseInt(req.params.id);
+  db.query('DELETE FROM tb_jadwal WHERE id_jadwal = ?', [jadwalId], (err, result) => {
+    if (err) {
+      console.error("Error deleting jadwal:", err);
+      return res.status(500).send(err);
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Jadwal not found' });
+    }
+    res.status(204).send();
+  });
+});
