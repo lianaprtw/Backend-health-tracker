@@ -291,4 +291,21 @@ app.post('/jadwals', (req, res) => {
       }
     );
   });
-  
+  // Update a jadwal
+app.put('/jadwals/:id', (req, res) => {
+  const jadwalId = parseInt(req.params.id);
+  const { id_user, id_traineer, tanggal, waktu, jenis_latihan } = req.body;
+  db.query('UPDATE tb_jadwal SET id_user = ?, id_traineer = ?, tanggal = ?, waktu = ?, jenis_latihan = ? WHERE id_jadwal = ?',
+    [id_user, id_traineer, tanggal, waktu, jenis_latihan, jadwalId],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating jadwal:", err);
+        return res.status(500).send(err);
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Jadwal not found' });
+      }
+      res.json({ message: 'Jadwal updated successfully', id_jadwal: jadwalId, id_user, id_traineer, tanggal, waktu, jenis_latihan });
+    }
+  );
+});
