@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Apr 2025 pada 12.08
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.0.30
+-- Generation Time: Apr 28, 2025 at 08:24 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -17,14 +17,14 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
--- 
--- Database: `database health tracker`
+--
+-- Database: `health_trecker`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_air_minum`
+-- Table structure for table `tb_air_minum`
 --
 
 CREATE TABLE `tb_air_minum` (
@@ -35,10 +35,17 @@ CREATE TABLE `tb_air_minum` (
   `jumlah_air` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tb_air_minum`
+--
+
+INSERT INTO `tb_air_minum` (`id_air_minum`, `id_user`, `tanggal`, `waktu`, `jumlah_air`) VALUES
+(1, 4, '2025-04-28', '04:20:00.000000', 900);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_jadwal`
+-- Table structure for table `tb_jadwal`
 --
 
 CREATE TABLE `tb_jadwal` (
@@ -50,26 +57,40 @@ CREATE TABLE `tb_jadwal` (
   `jenis_latihan` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tb_jadwal`
+--
+
+INSERT INTO `tb_jadwal` (`id_jadwal`, `id_user`, `id_trainner`, `tanggal`, `waktu`, `jenis_latihan`) VALUES
+(5, 2, 1, '2025-04-28', '2009', 'lari');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_proggress`
+-- Table structure for table `tb_proggress`
 --
 
 CREATE TABLE `tb_proggress` (
-  `id_progress` int(11) NOT NULL,
+  `id_proggress` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `tanggal` date NOT NULL,
-  `jumlah_langkah` int(11) NOT NULL,
+  `jumlah_langkah` float NOT NULL,
   `kalori_harian` float NOT NULL,
   `kalori_mingguan` float NOT NULL,
-  `kalori bulanan` float NOT NULL
+  `kalori_bulanan` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tb_proggress`
+--
+
+INSERT INTO `tb_proggress` (`id_proggress`, `id_user`, `tanggal`, `jumlah_langkah`, `kalori_harian`, `kalori_mingguan`, `kalori_bulanan`) VALUES
+(1, 4, '2025-04-28', 5000, 78, 90, 100);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_trainner`
+-- Table structure for table `tb_trainner`
 --
 
 CREATE TABLE `tb_trainner` (
@@ -80,10 +101,17 @@ CREATE TABLE `tb_trainner` (
   `password` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tb_trainner`
+--
+
+INSERT INTO `tb_trainner` (`id_trainner`, `nama`, `spesialis`, `email`, `password`) VALUES
+(1, 'sukijan', 'pijat', 'pijat@gmail.com', '111');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_user`
+-- Table structure for table `tb_user`
 --
 
 CREATE TABLE `tb_user` (
@@ -94,18 +122,27 @@ CREATE TABLE `tb_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `tb_user`
+--
+
+INSERT INTO `tb_user` (`id_user`, `nama`, `email`, `password`) VALUES
+(2, 'nathan', 'tanaka@gmail.com', 'uhuy'),
+(3, 'nathan', 'tanaka@gmail.com', 'uhuy'),
+(4, 'bambang', 'bambang@gmail.com', 'jaja');
+
+--
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `tb_air_minum`
+-- Indexes for table `tb_air_minum`
 --
 ALTER TABLE `tb_air_minum`
   ADD PRIMARY KEY (`id_air_minum`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indeks untuk tabel `tb_jadwal`
+-- Indexes for table `tb_jadwal`
 --
 ALTER TABLE `tb_jadwal`
   ADD PRIMARY KEY (`id_jadwal`),
@@ -113,77 +150,77 @@ ALTER TABLE `tb_jadwal`
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indeks untuk tabel `tb_proggress`
+-- Indexes for table `tb_proggress`
 --
 ALTER TABLE `tb_proggress`
-  ADD PRIMARY KEY (`id_progress`),
+  ADD PRIMARY KEY (`id_proggress`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indeks untuk tabel `tb_trainner`
+-- Indexes for table `tb_trainner`
 --
 ALTER TABLE `tb_trainner`
   ADD PRIMARY KEY (`id_trainner`);
 
 --
--- Indeks untuk tabel `tb_user`
+-- Indexes for table `tb_user`
 --
 ALTER TABLE `tb_user`
   ADD PRIMARY KEY (`id_user`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `tb_air_minum`
+-- AUTO_INCREMENT for table `tb_air_minum`
 --
 ALTER TABLE `tb_air_minum`
-  MODIFY `id_air_minum` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_air_minum` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_jadwal`
+-- AUTO_INCREMENT for table `tb_jadwal`
 --
 ALTER TABLE `tb_jadwal`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_proggress`
+-- AUTO_INCREMENT for table `tb_proggress`
 --
 ALTER TABLE `tb_proggress`
-  MODIFY `id_progress` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_proggress` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_trainner`
+-- AUTO_INCREMENT for table `tb_trainner`
 --
 ALTER TABLE `tb_trainner`
-  MODIFY `id_trainner` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_trainner` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `tb_user`
+-- AUTO_INCREMENT for table `tb_user`
 --
 ALTER TABLE `tb_user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `tb_air_minum`
+-- Constraints for table `tb_air_minum`
 --
 ALTER TABLE `tb_air_minum`
   ADD CONSTRAINT `tb_air_minum_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `tb_user` (`id_user`);
 
 --
--- Ketidakleluasaan untuk tabel `tb_jadwal`
+-- Constraints for table `tb_jadwal`
 --
 ALTER TABLE `tb_jadwal`
   ADD CONSTRAINT `tb_jadwal_ibfk_1` FOREIGN KEY (`id_trainner`) REFERENCES `tb_trainner` (`id_trainner`),
   ADD CONSTRAINT `tb_jadwal_ibfk_2` FOREIGN KEY (`id_user`) REFERENCES `tb_user` (`id_user`);
 
 --
--- Ketidakleluasaan untuk tabel `tb_proggress`
+-- Constraints for table `tb_proggress`
 --
 ALTER TABLE `tb_proggress`
   ADD CONSTRAINT `tb_proggress_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `tb_user` (`id_user`);

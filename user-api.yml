@@ -309,7 +309,7 @@ paths:
         '201':
           description: Data air minum berhasil ditambahkan
 
-  /airminum/{id}:
+  /air_minum/{id}:
     get:
       summary: Ambil data air minum berdasarkan ID
       parameters:
@@ -349,4 +349,62 @@ paths:
       responses:
         '204':
           description: Data berhasil dihapus
+  /proggress:
+    get:
+      summary: Ambil semua data progress
+      responses:
+        '200':
+          description: List data progress
+    post:
+      summary: Tambah data progress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proggress'
+      responses:
+        '201':
+          description: Data progress berhasil ditambahkan
+
+  /progress/{id}:
+    get:
+      summary: Ambil data progress berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data progress ditemukan
+    put:
+      summary: Update data progress
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proggress'
+      responses:
+        '200':
+          description: Data progress berhasil diupdate
+    delete:
+      summary: Hapus data progress
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Data progress berhasil dihapus
 
