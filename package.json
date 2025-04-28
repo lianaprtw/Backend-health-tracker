@@ -19,6 +19,7 @@
   "homepage": "https://github.com/lianaprtw/Backend-health-tracker#readme",
   "description": "",
   "dependencies": {
+    "db": "^6.0.3",
     "express": "^5.1.0",
     "mysql2": "^3.14.0",
     "swagger-ui-express": "^5.0.1",

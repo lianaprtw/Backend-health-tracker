@@ -5,7 +5,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   database: 'health_trecker',
-  password: 'lianamanis25oktober'
+  password: ''
 });
 
 //mengetes koneksi ke database
