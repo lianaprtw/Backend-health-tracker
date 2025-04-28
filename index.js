@@ -11,6 +11,10 @@ const app = express();
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.listen(3000, () => {
+    console.log("Server berjalan di http://localhost:3000");
+  });
+  
 // ========== USER ROUTES ==========
 app.get("/users", (req, res) => {
   db.query("SELECT id_user, nama, email FROM tb_user", (err, results) => {
