@@ -173,3 +173,120 @@ paths:
       responses:
         '204':
           description: User berhasil dihapus
+  /trainner:
+    get:
+      summary: Ambil semua traineer
+      responses:
+        '200':
+          description: List traineer
+    post:
+      summary: Tambah traineer baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trainner'
+      responses:
+        '201':
+          description: Traineer berhasil dibuat
+
+  /trainner/{id}:
+    get:
+      summary: Ambil data traineer berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data traineer ditemukan
+    put:
+      summary: Update data traineer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trainner'
+      responses:
+        '200':
+          description: Traineer berhasil diupdate
+    delete:
+      summary: Hapus traineer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Traineer berhasil dihapus
+
+  /jadwals:
+    get:
+      summary: Ambil semua jadwal
+      responses:
+        '200':
+          description: List jadwal
+    post:
+      summary: Tambah jadwal baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Jadwal'
+      responses:
+        '201':
+          description: Jadwal berhasil dibuat
+
+  /jadwals/{id}:
+    get:
+      summary: Ambil jadwal berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Jadwal ditemukan
+    put:
+      summary: Update jadwal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Jadwal'
+      responses:
+        '200':
+          description: Jadwal berhasil diupdate
+    delete:
+      summary: Hapus jadwal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Jadwal berhasil dihapus

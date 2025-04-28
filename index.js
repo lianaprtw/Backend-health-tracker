@@ -93,12 +93,12 @@ app.delete("/users/:id", (req, res) => {
 });
 
 // ========== TRAINEER ROUTES ==========
-app.get("/traineers", (req, res) => {
+app.get("/trainner", (req, res) => {
   db.query(
     "SELECT id_traineer, nama, spesialis, email FROM tb_traineer",
     (err, results) => {
       if (err) {
-        console.error("Error fetching traineers:", err);
+        console.error("Error fetching trainner:", err);
         return res.status(500).send(err);
       }
       res.json(results);
@@ -106,7 +106,7 @@ app.get("/traineers", (req, res) => {
   );
 });
 
-app.post("/traineers", (req, res) => {
+app.post("/trainner", (req, res) => {
   const { nama, spesialis, email, password } = req.body;
   db.query(
     "INSERT INTO tb_traineer (nama, spesialis, email, password) VALUES (?, ?, ?, ?)",
@@ -121,7 +121,7 @@ app.post("/traineers", (req, res) => {
   );
 });
 
-app.get("/traineers/:id", (req, res) => {
+app.get("/trainner/:id", (req, res) => {
   const traineerID = parseInt(req.params.id);
   db.query(
     "SELECT id_traineer, nama, spesialis, email FROM tb_traineer WHERE id_traineer = ?",
@@ -139,7 +139,7 @@ app.get("/traineers/:id", (req, res) => {
   );
 });
 
-app.put("/traineers/:id", (req, res) => {
+app.put("/trainner/:id", (req, res) => {
   const traineerId = parseInt(req.params.id);
   const { nama, spesialis, email, password } = req.body;
   db.query(
@@ -158,7 +158,7 @@ app.put("/traineers/:id", (req, res) => {
   );
 });
 
-app.delete("/traineers/:id", (req, res) => {
+app.delete("/trainner/:id", (req, res) => {
   const traineerId = parseInt(req.params.id);
   db.query("DELETE FROM tb_traineer WHERE id_traineer = ?", [traineerId], (err, result) => {
     if (err) {
