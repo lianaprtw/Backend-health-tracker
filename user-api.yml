@@ -67,7 +67,7 @@ components:
         - waktu
         - jenis_latihan
 
-    AirMinum:
+    air_minum:
       type: object
       properties:
         id_air_minum:
@@ -232,7 +232,7 @@ paths:
         '204':
           description: Traineer berhasil dihapus
 
-  /jadwals:
+  /jadwal:
     get:
       summary: Ambil semua jadwal
       responses:
@@ -250,7 +250,7 @@ paths:
         '201':
           description: Jadwal berhasil dibuat
 
-  /jadwals/{id}:
+  /jadwal/{id}:
     get:
       summary: Ambil jadwal berdasarkan ID
       parameters:
@@ -290,3 +290,63 @@ paths:
       responses:
         '204':
           description: Jadwal berhasil dihapus
+  
+  /air_minum:
+    get:
+      summary: Ambil semua data air minum
+      responses:
+        '200':
+          description: List konsumsi air
+    post:
+      summary: Tambah data air minum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/air_minum'
+      responses:
+        '201':
+          description: Data air minum berhasil ditambahkan
+
+  /airminum/{id}:
+    get:
+      summary: Ambil data air minum berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data ditemukan
+    put:
+      summary: Update data air minum
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/air_minum'
+      responses:
+        '200':
+          description: Data berhasil diupdate
+    delete:
+      summary: Hapus data air minum
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Data berhasil dihapus
+
