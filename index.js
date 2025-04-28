@@ -1,256 +1,174 @@
-import express from "express"; // mengimpor express untuk membuat server HTTP
-import swaggerUi from "swagger-ui-express"; // mengimpor swagger-ui-express untuk menyajikan dokumentasi API
-import fs from "fs"; //mengimpor fs untuk membaca file
-import YAML from "yaml"; // mengimpor modul YAML untuk mengonversi file .yaml menjadi objek JavaScript
+// index.js (Fixed Version)
+import express from "express";
+import swaggerUi from "swagger-ui-express";
+import fs from "fs";
+import YAML from "yaml";
 import db from "./db.js";
 
-// Membaca file YAML (dokumentasi Swagger) dan mengubahnya menjadi objek JS
 const swaggerDocument = YAML.parse(fs.readFileSync("./user-api.yml", "utf8"));
 
-const app = express(); // membuat instance dari aplikasi Express
-
-app.use(express.json()); // middleware untuk parsing JSON
-
-// Menyajikan dokumentasi API Swagger di endpoint '/docs'
+const app = express();
+app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// menambakan  kode untuk menjalankan server
-app.listen(3000, () => {
-  console.log("Server berjalan di http://localhost:3000");
-});
-
-//user routes//
-
-// Get all user
-HEAD;
+// ========== USER ROUTES ==========
 app.get("/users", (req, res) => {
-  // Mendefinisikan endpoint GET pada path '/users'
-  db.query("SELECT id_user, nama, email FROM tb_user", (err, result) => {
-    // Jalankan perintah SQL untuk mengambil data id_user, nama, dan email dari tabel tb_user
+  db.query("SELECT id_user, nama, email FROM tb_user", (err, results) => {
     if (err) {
-      // Jika terjadi error saat menjalankan query
-      console.error("Error fetching users:", err); // Tampilkan pesan error di console
-      return res.status(500).send(err); // Kirim response dengan status 500 (Internal Server Error) beserta pesan error
+      console.error("Error fetching users:", err);
+      return res.status(500).send(err);
     }
-    res.json(results); // Jika query berhasil, kirim hasilnya (array data user) dalam bentuk JSON ke client
-  });
-});
-
-// GET all trainers
-router.get("/", (req, res) => {
-  db.query("SELECT * FROM tb_trainner", (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
-app.get("/users", (req, res) => {
-  // Mendefinisikan endpoint GET pada path '/users'
-  db.query("SELECT id_user, nama, email FROM tb_user", (err, result) => {
-    // Jalankan perintah SQL untuk mengambil data id_user, nama, dan email dari tabel tb_user
-    if (err) {
-      // Jika terjadi error saat menjalankan query
-      console.error("Error fetching users:", err); // Tampilkan pesan error di console
-      return res.status(500).send(err); // Kirim response dengan status 500 (Internal Server Error) beserta pesan error
-    }
-    res.json(results); // Jika query berhasil, kirim hasilnya (array data user) dalam bentuk JSON ke client
-  });
-});
 
-//Create New User
-app.post("/users", (req, ress) => {
-  // Mengambil data 'nama', 'email', dan 'password' dari body request
-  const { nama, email, password } = req.body; // Menjalankan query SQL untuk memasukkan data user baru ke dalam tabel 'tb_user'
+app.post("/users", (req, res) => {
+  const { nama, email, password } = req.body;
   db.query(
-    "INSERT INTO tb_user (nama, email, password) VALUES (?, ?, ?)", // Query SQL dengan parameter placeholder (?)
-    [nama, email, password], // Data yang akan dimasukkan ke query, sesuai urutan placeholder
+    "INSERT INTO tb_user (nama, email, password) VALUES (?, ?, ?)",
+    [nama, email, password],
     (err, result) => {
-      // Callback function yang akan dijalankan setelah query selesai
       if (err) {
-        console.error("Error creating user:", err); // Jika terjadi error saat query dijalankan, tampilkan pesan error di console
-        return res.status(500).send(err); // Kirim response ke client dengan status 500 (Internal Server Error) dan kirim error-nya
+        console.error("Error creating user:", err);
+        return res.status(500).send(err);
       }
-      res.status(201).json({ id_user: result.insertId, nama, email }); // Jika berhasil, kirim response ke client dengan status 201 (Created)
+      res.status(201).json({ id_user: result.insertId, nama, email });
     }
   );
 });
 
-// Get User by ID
 app.get("/users/:id", (req, res) => {
-  const userId = parseInt(req.params.id); // Ambil ID dari URL dan ubah jadi angka
+  const userId = parseInt(req.params.id);
   db.query(
     "SELECT id_user, nama, email FROM tb_user WHERE id_user = ?",
     [userId],
     (err, results) => {
-      // Jalankan query untuk ambil data user dari tabel berdasarkan ID
       if (err) {
         console.error("Error fetching user by ID:", err);
-        return res.status(500).send(err); // Kalau error saat ambil data, kirim status 500
+        return res.status(500).send(err);
       }
       if (results.length === 0) {
-        return res.status(404).json({ message: "User not found" }); // Kalau user tidak ditemukan, kirim status 404
+        return res.status(404).json({ message: "User not found" });
       }
-      res.json(results[0]); // Kirim data user yang ditemukan
+      res.json(results[0]);
     }
   );
 });
 
-// Update User
 app.put("/users/:id", (req, res) => {
-  // Update data user berdasarkan ID dari URL
-  const userId = parseInt(req.params.id); // Ambil ID dari URL dan ubah ke angka
+  const userId = parseInt(req.params.id);
   const { nama, email, password } = req.body;
-  // Ambil data baru dari body request
   db.query(
     "UPDATE tb_user SET nama = ?, email= ?, password = ? WHERE id_user = ?",
-    [nama, email, password, userId], // Jalankan query untuk update data user berdasarkan ID dengan data baru
+    [nama, email, password, userId],
     (err, result) => {
       if (err) {
         console.error("Error updating user:", err);
-        return res.status(500).send(err); // Jika error saat update, kirim status 500
+        return res.status(500).send(err);
       }
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "User not found" }); // Jika tidak ada baris yang diubah (ID tidak ditemukan), kirim 404
+        return res.status(404).json({ message: "User not found" });
       }
-      res.json({
-        message: "User updated successfully",
-        id_user: userId,
-        nama,
-        email,
-      });
-      // Jika berhasil, kirim respon berhasil
+      res.json({ message: "User updated successfully", id_user: userId, nama, email });
     }
   );
 });
 
-// Delete User
 app.delete("/users/:id", (req, res) => {
-  // Hapus user berdasarkan ID
-  const userId = parseInt(req.params.id); // Ambil ID user dari URL dan ubah jadi angka
+  const userId = parseInt(req.params.id);
   db.query("DELETE FROM tb_user WHERE id_user = ?", [userId], (err, result) => {
-    // Jalankan query untuk menghapus user berdasarkan ID
     if (err) {
       console.error("Error deleting user:", err);
-      return res.status(500).send(err); // Jika terjadi error saat menghapus, kirim status 500
+      return res.status(500).send(err);
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "User not found" }); // Jika tidak ada baris yang dihapus (user tidak ditemukan), kirim status 404
+      return res.status(404).json({ message: "User not found" });
     }
-    res.status(204).send(); // Jika berhasil, kirim status 204 (no content)
+    res.status(204).send();
   });
 });
 
-// -- Trainner Routes -- //
-
-// Get all trainners
-// route untuk mengambil data semua traineer
+// ========== TRAINEER ROUTES ==========
 app.get("/traineers", (req, res) => {
-  // menjalankan query SQL untuk mengambil data id_traineer, nama, spesialis, dan email dari tabel tb_traineer
   db.query(
     "SELECT id_traineer, nama, spesialis, email FROM tb_traineer",
-    (err, result) => {
+    (err, results) => {
       if (err) {
-        console.error("Error fetching traineers:", err); // menampilkan pesan error di console jika terjadi kesalahan pada query
-        return res.status(500).send(err); // mengirim response error
+        console.error("Error fetching traineers:", err);
+        return res.status(500).send(err);
       }
-      res.json(result); // Mengirim hasil query dalam format JSON
+      res.json(results);
     }
   );
 });
 
-// Create New Traineer
-// route untuk menambahkan data traineer baru
 app.post("/traineers", (req, res) => {
-  const { nama, spesialis, email, password } = req.body; // mengambil data dari body request
-  // menjalankan query SQL untuk memasukkan data traineer baru ke dalam tabel tb_traineer
+  const { nama, spesialis, email, password } = req.body;
   db.query(
     "INSERT INTO tb_traineer (nama, spesialis, email, password) VALUES (?, ?, ?, ?)",
-    [nama, spesialis, email, password], // menyiapkan data untuk query
+    [nama, spesialis, email, password],
     (err, result) => {
       if (err) {
-        console.error("Error creating traineer:", err); // menampilkan pesan error di console jika terjadi kesalahan pada query
-        return res.status(500).send(err); // mengirim response error
+        console.error("Error creating traineer:", err);
+        return res.status(500).send(err);
       }
-      res
-        .status(201)
-        .json({ id_traineer: result.insertId, nama, spesialis, email }); // mengirim response sukses dengan status 201 (created)
+      res.status(201).json({ id_traineer: result.insertId, nama, spesialis, email });
     }
   );
 });
 
-// Get Traineer by ID
-// route untuk mengambil data traineer berdasarkan ID
 app.get("/traineers/:id", (req, res) => {
-  const traineerID = parseInt(req.params.id); //mengambil ID dari URL dan mengubahnya menjadi angka
-  // menjalankan query SQL untuk mengambil data id_traineer dari tabel tb_traineer berdasarkan ID
+  const traineerID = parseInt(req.params.id);
   db.query(
     "SELECT id_traineer, nama, spesialis, email FROM tb_traineer WHERE id_traineer = ?",
     [traineerID],
     (err, result) => {
       if (err) {
-        console.error("Error fetching traineer by ID:", err); //  menampilkan pesan error jika terjadi kesalahan pada query
-        return res.status(500).send(err); // mengirim response error
+        console.error("Error fetching traineer by ID:", err);
+        return res.status(500).send(err);
       }
       if (result.length === 0) {
-        return res.status(404).json({ message: "Traineer not found" }); // jika tidak ada data yang ditemukan, mengirim response 404 (not found)
+        return res.status(404).json({ message: "Traineer not found" });
       }
-      res.json(result[0]); // mengirim data traineer yang ditemukan dalam format JSON
+      res.json(result[0]);
     }
   );
 });
 
-// Update Traineer
-// route untuk mengupdate data traineer berdasarkan ID
 app.put("/traineers/:id", (req, res) => {
-  const traineerId = parseInt(req.params.id); // mengambil ID dari parameter URL dan mengubahnya menjadi angka
-  const { nama, spesialis, email, password } = req.body; // mengambil data baru dari body request
-  // menjalankan query SQL untuk mengupdate data traineer berdasarkan ID
+  const traineerId = parseInt(req.params.id);
+  const { nama, spesialis, email, password } = req.body;
   db.query(
     "UPDATE tb_traineer SET nama = ?, spesialis = ?, email = ?, password = ? WHERE id_traineer = ?",
-    [nama, spesialis, email, password, traineerId], // menyiapkan data untuk query
+    [nama, spesialis, email, password, traineerId],
     (err, result) => {
       if (err) {
-        console.error("Error updating traineer:", err); // menampilkan pesan error jika terjadi kesalahan pada query
+        console.error("Error updating traineer:", err);
         return res.status(500).send(err);
       }
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "traineer not fount" }); // jika tidak ada data yang diupdate, mengirim response 404 (not found)
+        return res.status(404).json({ message: "Traineer not found" });
       }
-      res.json({
-        message: "traineer updated successfully",
-        id_traineer: traineerId,
-        nama,
-        spesialis,
-        email,
-      }); // berhasil di update, mengirim response sukses
+      res.json({ message: "Traineer updated successfully", id_traineer: traineerId, nama, spesialis, email });
     }
   );
 });
 
-// Delete Traineer
-// route untuk menghapus data traineer berdasarkan ID
 app.delete("/traineers/:id", (req, res) => {
-  const traineerId = parseInt(req.params.id); // mengambil ID dari parameter URL dan mengubahnya menjadi angka
-  // menjalankan query SQL untuk menghapus data traineer berdasarkan ID
-  db.query(
-    "DELETE FROM tb_traineer WHERE id_traineer = ?",
-    [traineerId],
-    (err, result) => {
-      if (err) {
-        console.error("Error deleting traineer:", err); // menampilkan pesan error jika terjadi kesalahan pada query
-        return res.status(500).send(err); // mengirim response error
-      }
-
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Traineer not found" }); // jika tidak ada data yang dihapus, mengirim response 404 (not found)
-      }
-      res.status(204).send(); // mengirim response sukses dengan status 204
+  const traineerId = parseInt(req.params.id);
+  db.query("DELETE FROM tb_traineer WHERE id_traineer = ?", [traineerId], (err, result) => {
+    if (err) {
+      console.error("Error deleting traineer:", err);
+      return res.status(500).send(err);
     }
-  );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Traineer not found" });
+    }
+    res.status(204).send();
+  });
 });
 
-// --- Jadwal Routes ---\
-
-// Get all jadwals
+// ========== JADWAL ROUTES ==========
 app.get('/jadwals', (req, res) => {
   db.query('SELECT id_jadwal, id_user, id_traineer, tanggal, waktu, jenis_latihan FROM tb_jadwal', (err, results) => {
     if (err) {
@@ -261,41 +179,34 @@ app.get('/jadwals', (req, res) => {
   });
 });
 
-
-// Create a new jadwal
 app.post('/jadwals', (req, res) => {
-    const { id_user, id_traineer, tanggal, waktu, jenis_latihan } = req.body;
-    db.query(`INSERT INTO tb_jadwal (id_user, id_traineer, tanggal, waktu, jenis_latihan)
-                VALUES (?, ?, ?, ?, ?)`,
-      [id_user, id_traineer, tanggal, waktu, jenis_latihan],
-      (err, result) => {
-        if (err) {
-          console.error("Error creating jadwal:", err);
-          return res.status(500).send(err);
-        }
-        res.status(201).json({ id_jadwal: result.insertId, id_user, id_traineer, tanggal, waktu, jenis_latihan });
+  const { id_user, id_traineer, tanggal, waktu, jenis_latihan } = req.body;
+  db.query(`INSERT INTO tb_jadwal (id_user, id_traineer, tanggal, waktu, jenis_latihan) VALUES (?, ?, ?, ?, ?)`,
+    [id_user, id_traineer, tanggal, waktu, jenis_latihan],
+    (err, result) => {
+      if (err) {
+        console.error("Error creating jadwal:", err);
+        return res.status(500).send(err);
       }
-    );
-  });
+      res.status(201).json({ id_jadwal: result.insertId, id_user, id_traineer, tanggal, waktu, jenis_latihan });
+    }
+  );
+});
 
-  app.get('/jadwals/:id', (req, res) => {
-    const { id } = req.params;
-    db.query(
-      'SELECT * FROM tb_jadwal WHERE id_jadwal = ?',
-      [id],
-      (err, results) => {
-        if (err) {
-          console.error('Error fetching jadwal:', err);
-          return res.status(500).json({ error: err.message });
-        }
-        if (results.length === 0) {
-          return res.status(404).json({ message: 'Jadwal not found' });
-        }
-        res.json(results[0]);
-      }
-    );
+app.get('/jadwals/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM tb_jadwal WHERE id_jadwal = ?', [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching jadwal:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Jadwal not found' });
+    }
+    res.json(results[0]);
   });
-  // Update a jadwal
+});
+
 app.put('/jadwals/:id', (req, res) => {
   const jadwalId = parseInt(req.params.id);
   const { id_user, id_traineer, tanggal, waktu, jenis_latihan } = req.body;
@@ -313,7 +224,7 @@ app.put('/jadwals/:id', (req, res) => {
     }
   );
 });
-// Delete a jadwal
+
 app.delete('/jadwals/:id', (req, res) => {
   const jadwalId = parseInt(req.params.id);
   db.query('DELETE FROM tb_jadwal WHERE id_jadwal = ?', [jadwalId], (err, result) => {
