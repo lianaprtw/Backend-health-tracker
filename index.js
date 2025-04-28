@@ -249,10 +249,13 @@ app.delete("/traineers/:id", (req, res) => {
 
 // --- Jadwal Routes ---\
 
-// GET all schedules
-router.get("/", (req, res) => {
-  db.query("SELECT * FROM tb_jadwal", (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+// Get all jadwals
+app.get('/jadwals', (req, res) => {
+  db.query('SELECT id_jadwal, id_user, id_traineer, tanggal, waktu, jenis_latihan FROM tb_jadwal', (err, results) => {
+    if (err) {
+      console.error("Error fetching jadwals:", err);
+      return res.status(500).send(err);
+    }
     res.json(results);
   });
 });
